@@ -141,6 +141,10 @@ function ubah($data){
 	$tanggal_kegiatan = htmlspecialchars($data['tanggal_kegiatan']);
 	$target_lokasi = htmlspecialchars($data['target_lokasi']);
 	$keterangan = htmlspecialchars($data['keterangan']);
+	$file_name = " ";
+	if (isset($data['file'])) {
+		$file_name = $data['file'];
+	}
 	
 
 	// query insert data
@@ -151,7 +155,8 @@ function ubah($data){
 				sub_kegiatan = '$subkegiatan', 
 				tanggal_kegiatan = '$tanggal_kegiatan', 
 				target_lokasi = '$target_lokasi',
-				keterangan = '$keterangan'
+				keterangan = '$keterangan',
+				file = '$file_name'
 				WHERE id_arsip_dokumen = '$id' 
 			";
 	mysqli_query($koneksi, $query);

@@ -16,9 +16,13 @@ $id = $_GET['id_arsip_dokumen'];
 $isi = query("SELECT * FROM arsip_dokumen WHERE id_arsip_dokumen = $id")[0];
 
 if (isset($_POST['submit'])) {
-    // Handle form submission
-
     // Prepare data for update
+
+	$file_name = $_FILES['file']['name'];
+    $file_tmp = $_FILES['file']['tmp_name'];
+    $lokasi = "file/sudahupload/";
+    move_uploaded_file($file_tmp,$lokasi.$file_name);
+
     $data = [
         'id_arsip_dokumen' => $id,
         'kode_rekening' => $_POST['kode_rekening'],
@@ -26,32 +30,10 @@ if (isset($_POST['submit'])) {
         'sub_kegiatan' => $_POST['sub_kegiatan'],
         'tanggal_kegiatan' => $_POST['tanggal_kegiatan'],
         'target_lokasi' => $_POST['target_lokasi'],
-        'keterangan' => $_POST['keterangan']
+        'keterangan' => $_POST['keterangan'],
+		'file' => $file_name,
     ];
 
-    // Check if file is uploaded successfully
-    if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        // Pastikan berkas yang diunggah adalah PDF
-        if ($_FILES['file']['type'] != 'application/pdf') {
-            echo "<script>alert('Berkas harus dalam format PDF!');</script>";
-            header("Location: ubah.php?id_arsip_dokumen=$id");
-            exit;
-        }
-        $file_name = $_FILES['file']['name'];
-        $file_tmp = $_FILES['file']['tmp_name'];
-        // Tentukan lokasi penyimpanan file baru
-        $file_location = "file/sudahupload/" . $file_name;
-        // Pindahkan berkas ke direktori yang ditentukan
-        if (!move_uploaded_file($file_tmp, $file_location)) {
-            // Jika gagal memindahkan berkas, tampilkan pesan kesalahan
-            echo "<script>alert('Gagal mengunggah berkas.'); window.location.href = 'ubah.php?id_arsip_dokumen=$id';</script>";
-            exit;
-        }
-        // Jika file berhasil diunggah, tambahkan nama file ke dalam data yang akan diupdate
-        $data['file'] = $file_name;
-    }
-
-    // Attempt to update data
     $result = ubah($data);
 
     if ($result) {

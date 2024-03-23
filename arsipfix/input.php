@@ -5,6 +5,12 @@ if (!isset($_SESSION["login"])) {
 	header("Location: 'login.php'");
 }
 
+$query1 = $koneksi->query("SELECT * FROM kode_rekening ORDER BY kode_rekening ASC");
+$kode_rekening_list = $query1->fetch_all(MYSQLI_ASSOC);
+$query2 = $koneksi->query("SELECT * FROM kegiatan WHERE kegiatan LIKE '%$kegiatan%' ORDER BY kegiatan DESC");
+$kegiatan_list = $query2->fetch_all(MYSQLI_ASSOC);
+$query3  = $koneksi->query("SELECT * FROM kegiatan WHERE sub_kegiatan LIKE '%$sub_kegiatan%' ORDER BY sub_kegiatan DESC");
+$sub_kegiatan_list = $query3->fetch_all(MYSQLI_ASSOC);
 
 if (isset($_POST['submit'])) {
 
@@ -75,15 +81,30 @@ if (isset($_POST['submit'])) {
 							<div class="col-sm-6">
 								<div class="form-group">
 								<label class="control-label" for="kode_rekening">Kode Rekening : </label>
-									<input type="text" id="kode_rekening" name="kode_rekening" class="form-control" required>
+									<select id="kode_rekening" name="kode_rekening" class="form-control" required>
+											<option value="">Pilih Kode Rekening</option>
+											<?php foreach ($kode_rekening_list as $kode_rekening_item) : ?>
+												<option value="<?= $kode_rekening_item['kode_rekening']; ?>"><?= $kode_rekening_item['kode_rekening']; ?></option>
+											<?php endforeach; ?>
+									</select>
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="kegiatan">kegiatan : </label>
-									<input type="text" id="kegiatan" name="kegiatan" class="form-control" required>
+									<select id="kegiatan" name="kegiatan" class="form-control" required>
+											<option value="">Pilih Kegiatan</option>
+											<?php foreach ($kegiatan_list as $kegiatan_item) : ?>
+												<option value="<?= $kegiatan_item['kegiatan']; ?>"><?= $kegiatan_item['kegiatan']; ?></option>
+											<?php endforeach; ?>
+									</select>
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="sub_kegiatan">sub kegiatan : </label>
-									<input type="text" id="sub_kegiatan" name="sub_kegiatan" class="form-control" required>
+									<select id="sub_kegiatan" name="sub_kegiatan" class="form-control" required>
+											<option value="">Pilih Kegiatan</option>
+											<?php foreach ($sub_kegiatan_list as $sub_kegiatan_item) : ?>
+												<option value="<?= $sub_kegiatan_item['sub_kegiatan']; ?>"><?= $sub_kegiatan_item['sub_kegiatan']; ?></option>
+											<?php endforeach; ?>
+									</select>
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="tanggal_kegiatan">Tanggal kegiatan : </label>
